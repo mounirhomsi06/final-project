@@ -10,11 +10,16 @@ if (session) {
   let explode = 1;
   let activePart = null;
 
-  const watch = mountExplodedWatch(document.getElementById("watch-stage"), { config, explode, activePart }, (part) => {
-    activePart = part;
-    watch.update({ activePart });
-    updatePartHint();
-  });
+  const watch = mountExplodedWatch(
+    document.getElementById("watch-stage"),
+    { config, explode, activePart },
+    (part) => {
+      activePart = part;
+      watch.update({ activePart });
+      updatePartHint();
+    },
+    document.getElementById("watch-stage-reflection"),
+  );
 
   const partHint = document.getElementById("part-hint");
   function updatePartHint() {

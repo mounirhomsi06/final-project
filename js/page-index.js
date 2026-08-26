@@ -5,7 +5,8 @@ import { mountExplodedWatch } from "./exploded-watch.js";
 const session = initSite();
 if (session) {
   const container = document.getElementById("hero-watch");
-  const watch = mountExplodedWatch(container, { config: DEFAULT_CONFIG, explode: 0 });
+  const reflection = document.getElementById("hero-watch-reflection");
+  const watch = mountExplodedWatch(container, { config: DEFAULT_CONFIG, explode: 0 }, null, reflection);
 
   // The hero watch breathes apart shortly after arrival — the "door opening".
   setTimeout(() => watch.update({ explode: 0.42 }), 900);

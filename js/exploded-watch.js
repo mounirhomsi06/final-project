@@ -101,9 +101,27 @@ function defs(id, m, dial) {
     <filter id="lumeglow-${id}" x="-80%" y="-80%" width="260%" height="260%">
       <feGaussianBlur stdDeviation="2.4" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
     </filter>
+    <filter id="caseblur-${id}" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.5" /></filter>
+
+    <radialGradient id="caseao-${id}" cx="50%" cy="50%" r="50%">
+      <stop offset="78%" stop-color="#000" stop-opacity="0" /><stop offset="94%" stop-color="#000" stop-opacity="0" /><stop offset="100%" stop-color="#000" stop-opacity="0.55" />
+    </radialGradient>
 
     <clipPath id="dialclip-${id}"><circle cx="${CX}" cy="${CY}" r="84" /></clipPath>
   </defs>`;
+}
+
+// A soft studio-light sweep across the polished bezel/case rim, plus a
+// darker ambient-occlusion ring at the outer edge — sells the case as
+// rounded metal rather than a flat disc.
+function caseGloss(id) {
+  const hiA = P(-70, 99);
+  const hiB = P(-20, 99);
+  const loA = P(110, 99);
+  const loB = P(150, 99);
+  return `<circle cx="${CX}" cy="${CY}" r="98" fill="url(#caseao-${id})" />
+    <path d="M${hiA.x} ${hiA.y} A99 99 0 0 1 ${hiB.x} ${hiB.y}" stroke="#ffffff" stroke-opacity="0.5" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#caseblur-${id})" />
+    <path d="M${loA.x} ${loA.y} A99 99 0 0 1 ${loB.x} ${loB.y}" stroke="#ffffff" stroke-opacity="0.16" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#caseblur-${id})" />`;
 }
 
 function claspMarkup(config, m, id) {
@@ -418,6 +436,7 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
           <circle cx="${CX}" cy="${CY}" r="106.5" fill="none" stroke="#000" stroke-opacity="0.45" stroke-width="1.4" />
           <circle cx="${CX}" cy="${CY}" r="89.5" fill="none" stroke="#000" stroke-opacity="0.4" stroke-width="1.4" />
           <circle cx="${CX}" cy="${CY}" r="103" fill="none" stroke="#fff" stroke-opacity="0.35" stroke-width="1" />
+          ${caseGloss(id)}
         </g>
       </g>
 
@@ -443,13 +462,17 @@ function escapeXml(s) {
  * Mounts an exploded watch into `container` and wires up part hover
  * highlighting. Returns an update(partial) function to re-render with a
  * new config/explode/activePart without re-attaching listeners.
+ *
+ * `reflectionContainer`, if given, is kept in sync with the same markup —
+ * pair it with a flipped, masked wrapper in CSS to get a ground reflection.
  */
-export function mountExplodedWatch(container, initial, onPartHover) {
+export function mountExplodedWatch(container, initial, onPartHover, reflectionContainer) {
   let state = { ...initial };
 
   function render() {
     const { svg } = explodedWatchMarkup(state);
     container.innerHTML = svg;
+    if (reflectionContainer) reflectionContainer.innerHTML = svg;
     if (onPartHover) {
       container.querySelectorAll("[data-part]").forEach((el) => {
         el.addEventListener("mouseenter", () => onPartHover(el.dataset.part));
