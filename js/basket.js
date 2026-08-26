@@ -3,6 +3,10 @@
 
 const KEY = "atelier-basket";
 
+// Every reference is numbered and finished by hand — the atelier limits
+// each design to two per customer.
+export const MAX_QTY_PER_ITEM = 2;
+
 function load() {
   try {
     const raw = localStorage.getItem(KEY);
@@ -27,11 +31,14 @@ export function getItems() {
 export function addItem(item) {
   const items = load();
   const found = items.find((i) => i.id === item.id);
+  if (found && found.qty >= MAX_QTY_PER_ITEM) {
+    return { items, capped: true };
+  }
   const next = found
     ? items.map((i) => (i.id === item.id ? { ...i, qty: i.qty + 1 } : i))
     : [...items, { ...item, qty: 1 }];
   save(next);
-  return next;
+  return { items: next, capped: false };
 }
 
 export function removeItem(id) {
@@ -42,7 +49,8 @@ export function removeItem(id) {
 
 export function setQty(id, qty) {
   const items = load();
-  const next = qty <= 0 ? items.filter((i) => i.id !== id) : items.map((i) => (i.id === id ? { ...i, qty } : i));
+  const clamped = Math.min(qty, MAX_QTY_PER_ITEM);
+  const next = clamped <= 0 ? items.filter((i) => i.id !== id) : items.map((i) => (i.id === id ? { ...i, qty: clamped } : i));
   save(next);
   return next;
 }

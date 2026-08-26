@@ -152,6 +152,27 @@
 
 </div>
 
+<!-- ================= VIEW MODAL ================= -->
+<div id="view-modal" hidden class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-background/90 px-6 py-12 backdrop-blur-sm">
+  <div id="view-modal-panel" class="relative w-full max-w-3xl rounded-lg border border-border bg-card p-6 shadow-lux sm:p-10">
+    <button id="view-modal-close" aria-label="Close" class="absolute right-4 top-4 text-muted-foreground transition-colors duration-300 hover:text-foreground">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="grid items-center gap-8 sm:grid-cols-2">
+      <div class="stage overflow-hidden rounded-md">
+        <div id="view-modal-stage" class="mx-auto h-[420px] w-full max-w-[340px]"></div>
+      </div>
+      <div>
+        <p id="view-modal-line" class="text-[11px] uppercase tracking-[0.3em] text-primary"></p>
+        <h2 id="view-modal-model" class="mt-1 text-3xl"></h2>
+        <p id="view-modal-blurb" class="mt-2 text-sm leading-relaxed text-muted-foreground"></p>
+        <p id="view-modal-price" class="mt-6 font-display text-3xl text-primary"></p>
+        <button id="view-modal-add" class="mt-6 inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 sm:w-auto">Add to basket</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div id="toast-root" class="pointer-events-none fixed bottom-6 right-6 z-[60] flex flex-col gap-2"></div>
 
 <script type="module" src="js/reveal.js"></script>

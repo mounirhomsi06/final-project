@@ -140,7 +140,7 @@ if (session) {
   // Add to basket
   document.getElementById("add-to-basket").addEventListener("click", () => {
     const price = configPrice(config);
-    addItem({
+    const { capped } = addItem({
       id: `custom-${config.metal}-${config.dial}-${config.strap}-${config.clasp}-${config.engraving.trim()}`,
       name: "Bespoke Atelier Horo",
       subtitle: configSummary(config) + (config.engraving.trim() ? ` · "${config.engraving.trim()}"` : ""),
@@ -148,6 +148,10 @@ if (session) {
       kind: "custom",
     });
     refreshBasketCount();
-    toastSuccess("Added to your basket", configSummary(config));
+    if (capped) {
+      toastSuccess("Limited to two per build", "For exclusivity, this exact configuration is capped at 2 — try a variation.");
+    } else {
+      toastSuccess("Added to your basket", configSummary(config));
+    }
   });
 }

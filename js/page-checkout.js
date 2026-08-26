@@ -1,6 +1,7 @@
 import { initSite, refreshBasketCount } from "./site.js";
-import { getItems, removeItem, setQty, clearBasket, basketTotal } from "./basket.js";
+import { getItems, removeItem, setQty, clearBasket, basketTotal, MAX_QTY_PER_ITEM } from "./basket.js";
 import { money } from "./watch-data.js";
+import { toastSuccess } from "./toast.js";
 
 const session = initSite();
 if (session) {
@@ -34,7 +35,7 @@ if (session) {
             <div class="mt-2 flex items-center gap-2">
               <button data-action="dec" class="size-6 rounded border border-border text-xs hover:border-primary" aria-label="Decrease quantity">−</button>
               <span class="w-5 text-center text-xs">${i.qty}</span>
-              <button data-action="inc" class="size-6 rounded border border-border text-xs hover:border-primary" aria-label="Increase quantity">+</button>
+              <button data-action="inc" class="size-6 rounded border text-xs ${i.qty >= MAX_QTY_PER_ITEM ? "cursor-not-allowed border-border/50 text-muted-foreground/50" : "border-border hover:border-primary"}" aria-label="Increase quantity" ${i.qty >= MAX_QTY_PER_ITEM ? "aria-disabled=\"true\"" : ""}>+</button>
               <button data-action="remove" class="ml-3 text-xs text-muted-foreground underline-offset-4 hover:text-destructive hover:underline">Remove</button>
             </div>
           </div>
@@ -51,6 +52,10 @@ if (session) {
         render();
       });
       li.querySelector('[data-action="inc"]').addEventListener("click", () => {
+        if (item.qty >= MAX_QTY_PER_ITEM) {
+          toastSuccess("Limited to two per design", "For exclusivity, this piece is capped at 2 per order.");
+          return;
+        }
         setQty(id, item.qty + 1);
         render();
       });

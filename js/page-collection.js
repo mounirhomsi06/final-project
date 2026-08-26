@@ -55,9 +55,60 @@ const PIECES = [
   },
 ];
 
+function addPieceToBasket(p) {
+  const { capped } = addItem({ id: p.id, name: p.model, subtitle: p.blurb, price: p.price, kind: "brand" });
+  refreshBasketCount();
+  if (capped) {
+    toastSuccess("Limited to two per design", "For exclusivity, this reference is capped at 2 per order.");
+  } else {
+    toastSuccess("Added to your basket", p.model);
+  }
+}
+
 const session = initSite();
 if (session) {
   const grid = document.getElementById("pieces-grid");
+  const modal = document.getElementById("view-modal");
+  const modalStage = document.getElementById("view-modal-stage");
+  const modalLine = document.getElementById("view-modal-line");
+  const modalModel = document.getElementById("view-modal-model");
+  const modalBlurb = document.getElementById("view-modal-blurb");
+  const modalPrice = document.getElementById("view-modal-price");
+  const modalAdd = document.getElementById("view-modal-add");
+  let modalWatch = null;
+  let activePiece = null;
+
+  function openModal(p) {
+    activePiece = p;
+    modalLine.textContent = p.line;
+    modalModel.textContent = p.model;
+    modalBlurb.textContent = p.blurb;
+    modalPrice.textContent = money(p.price);
+    if (modalWatch) {
+      modalWatch.update({ config: p.config, explode: 0 });
+    } else {
+      modalWatch = mountExplodedWatch(modalStage, { config: p.config, explode: 0, uid: "view-modal" });
+    }
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.style.overflow = "";
+    activePiece = null;
+  }
+
+  document.getElementById("view-modal-close").addEventListener("click", closeModal);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeModal();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !modal.hidden) closeModal();
+  });
+  modalAdd.addEventListener("click", () => {
+    if (activePiece) addPieceToBasket(activePiece);
+  });
 
   PIECES.forEach((p, i) => {
     const article = document.createElement("div");
@@ -66,7 +117,7 @@ if (session) {
     article.style.transitionDelay = `${(i % 3) * 110}ms`;
     article.innerHTML = `
       <article class="group flex h-full flex-col rounded-lg border border-border bg-card/50 p-6 transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-lux">
-        <div class="stage overflow-hidden rounded-md">
+        <div class="stage view-btn cursor-pointer overflow-hidden rounded-md">
           <div class="watch-stage mx-auto h-64 w-full"></div>
         </div>
         <p class="mt-5 text-[11px] uppercase tracking-[0.3em] text-primary">${p.line}</p>
@@ -74,7 +125,10 @@ if (session) {
         <p class="mt-1 text-sm text-muted-foreground">${p.blurb}</p>
         <div class="mt-auto flex items-center justify-between border-t border-border pt-4">
           <span class="font-display text-xl">${money(p.price)}</span>
-          <button class="add-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">Add to basket</button>
+          <div class="flex items-center gap-2">
+            <button class="view-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">View</button>
+            <button class="add-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">Add to basket</button>
+          </div>
         </div>
       </article>
     `;
@@ -85,10 +139,7 @@ if (session) {
     article.addEventListener("mouseenter", () => watch.update({ explode: 0.35 }));
     article.addEventListener("mouseleave", () => watch.update({ explode: 0 }));
 
-    article.querySelector(".add-btn").addEventListener("click", () => {
-      addItem({ id: p.id, name: p.model, subtitle: p.blurb, price: p.price, kind: "brand" });
-      refreshBasketCount();
-      toastSuccess("Added to your basket", p.model);
-    });
+    article.querySelectorAll(".view-btn").forEach((el) => el.addEventListener("click", () => openModal(p)));
+    article.querySelector(".add-btn").addEventListener("click", () => addPieceToBasket(p));
   });
 }
