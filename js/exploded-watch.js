@@ -33,7 +33,7 @@ const P = (angleDeg, radius) => ({
 
 let instanceCounter = 0;
 
-function defs(id, m, dial) {
+function defs(id, m, dial, linkMetal) {
   return `<defs>
     <linearGradient id="metal-${id}" x1="0.08" y1="0" x2="0.92" y2="1">
       <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" /><stop offset="12%" stop-color="${m.light}" />
@@ -91,9 +91,9 @@ function defs(id, m, dial) {
       <stop offset="100%" stop-color="#000" stop-opacity="0.55" />
     </linearGradient>
     <linearGradient id="link-${id}" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="${m.dark}" /><stop offset="16%" stop-color="${m.mid}" /><stop offset="30%" stop-color="${m.light}" />
-      <stop offset="46%" stop-color="${m.mid}" /><stop offset="62%" stop-color="${m.light}" /><stop offset="80%" stop-color="${m.mid}" />
-      <stop offset="100%" stop-color="${m.dark}" />
+      <stop offset="0%" stop-color="${linkMetal.dark}" /><stop offset="16%" stop-color="${linkMetal.mid}" /><stop offset="30%" stop-color="${linkMetal.light}" />
+      <stop offset="46%" stop-color="${linkMetal.mid}" /><stop offset="62%" stop-color="${linkMetal.light}" /><stop offset="80%" stop-color="${linkMetal.mid}" />
+      <stop offset="100%" stop-color="${linkMetal.dark}" />
     </linearGradient>
 
     <filter id="shadow-${id}" x="-60%" y="-60%" width="220%" height="220%"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.5" /></filter>
@@ -305,6 +305,7 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
   const dial = dialColor(config.dial);
   const strap = strapColor(config.strap);
   const metalStrap = isMetalStrap(config.strap);
+  const linkMetal = metalStrap ? metalColors(config.strap === "metal-gold" ? "gold" : "silver") : m;
   const rubberStrap = config.strap === "rubber-black";
   const lightDial = config.dial === "ivory" || config.dial === "champagne";
   const ink = lightDial ? "#2a2c31" : m.light;
@@ -351,7 +352,7 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
     : "";
 
   const svg = `<svg viewBox="0 -150 400 860" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Exploded view of a customisable wristwatch">
-    ${defs(id, m, dial)}
+    ${defs(id, m, dial, linkMetal)}
 
     <g style="transform:translate(${CX}px,${CY}px) scale(1, ${r(1 - 0.26 * explode)}) translate(${-CX}px,${-CY}px);transition:transform 900ms cubic-bezier(.22,1,.36,1)">
       <ellipse cx="${CX}" cy="600" rx="${r(122 - explode * 30)}" ry="${r(17 - explode * 7)}" fill="#000" opacity="${r(0.4 - explode * 0.18)}" />
