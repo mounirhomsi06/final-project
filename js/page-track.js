@@ -77,7 +77,7 @@ if (session) {
     pollTimer = setInterval(() => {
       const fresh = getOrder(id);
       if (fresh) render(fresh);
-    }, 15000);
+    }, 1000);
   }
 
   form.addEventListener("submit", (e) => {

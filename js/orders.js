@@ -6,8 +6,8 @@
 const KEY = "atelier-orders";
 
 const STAGE_DURATIONS_MS = {
-  preparing: 15 * 60 * 1000, // first 15 minutes: at the bench
-  shipped: 45 * 60 * 1000, // next 30 minutes: on its way
+  preparing: 10 * 1000, // first 10s: at the bench
+  shipped: 20 * 1000, // next 10s: on its way
   // after that: delivered
 };
 
