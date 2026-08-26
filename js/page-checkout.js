@@ -77,25 +77,32 @@ if (session) {
   document.getElementById("payment-form").addEventListener("submit", (e) => {
     e.preventDefault();
     const form = e.target;
-    const customer = {
-      name: form.name.value.trim(),
-      email: form.email.value.trim(),
-      address: form.address.value.trim(),
-    };
 
     payBtn.disabled = true;
     payBtn.textContent = "Processing…";
     setTimeout(() => {
-      const items = getItems();
-      const subtotal = basketTotal(items);
-      const t = tax(subtotal);
-      const order = createOrder({ items, customer, subtotal, tax: t, total: subtotal + t });
+      try {
+        const customer = {
+          name: form.name.value.trim(),
+          email: form.email.value.trim(),
+          address: form.address.value.trim(),
+        };
+        const items = getItems();
+        const subtotal = basketTotal(items);
+        const t = tax(subtotal);
+        const order = createOrder({ items, customer, subtotal, tax: t, total: subtotal + t });
 
-      renderReceipt(order);
-      clearBasket();
-      refreshBasketCount();
-      document.getElementById("checkout-body").hidden = true;
-      document.getElementById("checkout-confirmed").hidden = false;
+        renderReceipt(order);
+        clearBasket();
+        refreshBasketCount();
+        document.getElementById("checkout-body").hidden = true;
+        document.getElementById("checkout-confirmed").hidden = false;
+      } catch (err) {
+        console.error("Checkout failed:", err);
+        payBtn.disabled = false;
+        payBtn.textContent = "Try again";
+        toastSuccess("Something went wrong", "Please hard-refresh the page (Cmd/Ctrl+Shift+R) and try again.");
+      }
     }, 1400);
   });
 
