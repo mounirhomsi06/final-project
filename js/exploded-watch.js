@@ -74,7 +74,7 @@ function defs(id, m, dial) {
       <stop offset="62%" stop-color="${dial}" /><stop offset="100%" stop-color="#000" stop-opacity="0.62" />
     </radialGradient>
     <radialGradient id="dialvig-${id}" cx="50%" cy="50%" r="50%">
-      <stop offset="62%" stop-color="#000" stop-opacity="0" /><stop offset="100%" stop-color="#000" stop-opacity="0.5" />
+      <stop offset="58%" stop-color="#000" stop-opacity="0" /><stop offset="100%" stop-color="#000" stop-opacity="0.58" />
     </radialGradient>
 
     <radialGradient id="glass-${id}" cx="35%" cy="25%" r="85%">
@@ -122,6 +122,18 @@ function caseGloss(id) {
   return `<circle cx="${CX}" cy="${CY}" r="98" fill="url(#caseao-${id})" />
     <path d="M${hiA.x} ${hiA.y} A99 99 0 0 1 ${hiB.x} ${hiB.y}" stroke="#ffffff" stroke-opacity="0.5" stroke-width="10" fill="none" stroke-linecap="round" filter="url(#caseblur-${id})" />
     <path d="M${loA.x} ${loA.y} A99 99 0 0 1 ${loB.x} ${loB.y}" stroke="#ffffff" stroke-opacity="0.16" stroke-width="6" fill="none" stroke-linecap="round" filter="url(#caseblur-${id})" />`;
+}
+
+// Two studio-light catches on the sapphire: a soft hotspot and a crisp
+// plus-shaped reflection, the way a ring light or softbox shows up in
+// real watch macro photography.
+function crystalGlints(id) {
+  const hot = P(-42, 44);
+  const cross = P(-15, 60);
+  return `<circle cx="${hot.x}" cy="${hot.y}" r="7" fill="#ffffff" opacity="0.16" />
+    <circle cx="${hot.x}" cy="${hot.y}" r="2.4" fill="#ffffff" opacity="0.85" />
+    <line x1="${cross.x}" y1="${r(cross.y - 9)}" x2="${cross.x}" y2="${r(cross.y + 9)}" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round" />
+    <line x1="${r(cross.x - 9)}" y1="${cross.y}" x2="${r(cross.x + 9)}" y2="${cross.y}" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2.2" stroke-linecap="round" />`;
 }
 
 function claspMarkup(config, m, id) {
@@ -369,6 +381,9 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
           <circle cx="${CX}" cy="${CY}" r="100" fill="url(#metal-${id})" filter="url(#brush-${id})" opacity="0.9" />
           <circle cx="${CX}" cy="${CY}" r="100" fill="none" stroke="#000" stroke-opacity="0.4" stroke-width="1.4" />
           <circle cx="${CX}" cy="${CY}" r="93" fill="none" stroke="#fff" stroke-opacity="0.22" stroke-width="1.2" />
+          <line x1="106" y1="256" x2="294" y2="256" stroke="#ffffff" stroke-opacity="0.14" stroke-width="2.4" />
+          <line x1="106" y1="270" x2="294" y2="270" stroke="#000000" stroke-opacity="0.16" stroke-width="1.6" />
+          <line x1="106" y1="300" x2="294" y2="300" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.8" />
           <circle cx="${CX}" cy="${CY}" r="86" fill="#08090b" opacity="0.9" />
 
           <circle cx="${CX}" cy="${CY}" r="78" fill="#191c21" />
@@ -417,8 +432,10 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
           <g filter="url(#softshadow-${id})">
             <path d="M197 279 L197 226 Q200 218 203 226 L203 279 Z" fill="${lightDial ? "#23262b" : m.light}" transform="rotate(-58 ${CX} ${CY})" />
             <path d="M198.4 272 L198.4 230 Q200 224 201.6 230 L201.6 272 Z" fill="${LUME}" opacity="0.6" transform="rotate(-58 ${CX} ${CY})" filter="url(#lumeglow-${id})" />
+            <line x1="200" y1="278" x2="200" y2="227" stroke="#ffffff" stroke-opacity="0.3" stroke-width="0.8" transform="rotate(-58 ${CX} ${CY})" />
             <path d="M197.8 280 L197.8 208 Q200 200 202.2 208 L202.2 280 Z" fill="${lightDial ? "#23262b" : m.light}" transform="rotate(52 ${CX} ${CY})" />
             <path d="M199 272 L199 212 Q200 207 201 212 L201 272 Z" fill="${LUME}" opacity="0.6" transform="rotate(52 ${CX} ${CY})" filter="url(#lumeglow-${id})" />
+            <line x1="200" y1="279" x2="200" y2="209" stroke="#ffffff" stroke-opacity="0.3" stroke-width="0.8" transform="rotate(52 ${CX} ${CY})" />
             <g transform="rotate(210 ${CX} ${CY})">
               <rect x="199.3" y="200" width="1.4" height="94" fill="#c8503c" />
               <circle cx="${CX}" cy="222" r="4" fill="none" stroke="#c8503c" stroke-width="1.4" />
@@ -442,11 +459,12 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
 
       <g transform="${t("crystal")}" ${partAttrs("crystal")}>
         <circle cx="${CX}" cy="${CY}" r="88" fill="url(#glass-${id})" />
-        <circle cx="${CX}" cy="${CY}" r="88" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="1.6" />
+        <circle cx="${CX}" cy="${CY}" r="88" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="1.6" />
+        <circle cx="${CX}" cy="${CY}" r="85.5" fill="none" stroke="#04101f" stroke-opacity="0.22" stroke-width="1" />
         <circle cx="${CX}" cy="${CY}" r="83" fill="none" stroke="#bcd8ff" stroke-opacity="0.28" stroke-width="1" />
-        <path d="M144 232 A88 88 0 0 1 246 198" stroke="url(#sheen-${id})" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.75" />
+        <path d="M144 232 A88 88 0 0 1 246 198" stroke="url(#sheen-${id})" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.6" />
         <path d="M150 330 A88 88 0 0 0 214 360" stroke="#ffffff" stroke-opacity="0.18" stroke-width="7" fill="none" stroke-linecap="round" />
-        <ellipse cx="168" cy="238" rx="20" ry="11" fill="#ffffff" opacity="0.16" transform="rotate(-34 168 238)" />
+        ${crystalGlints(id)}
       </g>
     </g>
   </svg>`;
