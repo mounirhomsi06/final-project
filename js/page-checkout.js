@@ -2,6 +2,7 @@ import { initSite, refreshBasketCount } from "./site.js";
 import { getItems, removeItem, setQty, clearBasket, basketTotal, MAX_QTY_PER_ITEM } from "./basket.js";
 import { money } from "./watch-data.js";
 import { toastSuccess } from "./toast.js";
+import { createOrder } from "./orders.js";
 
 const session = initSite();
 if (session) {
@@ -75,15 +76,55 @@ if (session) {
 
   document.getElementById("payment-form").addEventListener("submit", (e) => {
     e.preventDefault();
+    const form = e.target;
+    const customer = {
+      name: form.name.value.trim(),
+      email: form.email.value.trim(),
+      address: form.address.value.trim(),
+    };
+
     payBtn.disabled = true;
     payBtn.textContent = "Processing…";
     setTimeout(() => {
+      const items = getItems();
+      const subtotal = basketTotal(items);
+      const t = tax(subtotal);
+      const order = createOrder({ items, customer, subtotal, tax: t, total: subtotal + t });
+
+      renderReceipt(order);
       clearBasket();
       refreshBasketCount();
       document.getElementById("checkout-body").hidden = true;
       document.getElementById("checkout-confirmed").hidden = false;
     }, 1400);
   });
+
+  function renderReceipt(order) {
+    document.getElementById("receipt-order-id").textContent = order.id;
+    document.getElementById("receipt-date").textContent = new Date(order.createdAt).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    document.getElementById("receipt-items").innerHTML = order.items
+      .map(
+        (i) => `
+        <li class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-sm">${escapeHtml(i.name)} <span class="text-muted-foreground">× ${i.qty}</span></p>
+            <p class="mt-0.5 text-xs text-muted-foreground">${escapeHtml(i.subtitle)}</p>
+          </div>
+          <span class="whitespace-nowrap font-display text-base">${money(i.price * i.qty)}</span>
+        </li>`,
+      )
+      .join("");
+    document.getElementById("receipt-subtotal").textContent = money(order.subtotal);
+    document.getElementById("receipt-tax").textContent = money(order.tax);
+    document.getElementById("receipt-total").textContent = money(order.total);
+    document.getElementById("receipt-shipping").textContent =
+      [order.customer.name, order.customer.address].filter(Boolean).join(" · ") || "—";
+    document.getElementById("receipt-track-link").href = `track.html?order=${encodeURIComponent(order.id)}`;
+  }
 
   render();
 }
