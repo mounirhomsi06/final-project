@@ -13,6 +13,43 @@ function hide(el) {
   el.hidden = true;
 }
 
+const STRENGTH_LABELS = ["", "Weak", "Fair", "Good", "Strong"];
+const STRENGTH_COLORS = ["", "var(--destructive)", "#c9974a", "var(--gold-soft)", "var(--gold)"];
+
+// A simple length + character-variety heuristic — no external library,
+// just enough signal to nudge people toward a stronger password.
+function passwordStrength(pw) {
+  if (!pw) return { score: 0, label: "" };
+
+  let variety = 0;
+  if (/[a-z]/.test(pw)) variety++;
+  if (/[A-Z]/.test(pw)) variety++;
+  if (/[0-9]/.test(pw)) variety++;
+  if (/[^A-Za-z0-9]/.test(pw)) variety++;
+
+  let score = 1;
+  if (pw.length >= 8 && variety >= 2) score = 2;
+  if (pw.length >= 10 && variety >= 3) score = 3;
+  if (pw.length >= 12 && variety >= 4) score = 4;
+
+  return { score, label: STRENGTH_LABELS[score] };
+}
+
+function wirePasswordStrength() {
+  const input = document.getElementById("signup-password");
+  const segs = document.querySelectorAll("#password-strength-bar [data-seg]");
+  const label = document.getElementById("password-strength-label");
+  if (!input || !segs.length || !label) return;
+
+  input.addEventListener("input", () => {
+    const { score, label: text } = passwordStrength(input.value);
+    segs.forEach((seg, i) => {
+      seg.style.background = i < score ? STRENGTH_COLORS[score] : "";
+    });
+    label.textContent = text;
+  });
+}
+
 function wireAuthGate() {
   const gate = document.getElementById("auth-gate");
   const loginTab = document.getElementById("tab-login");
@@ -80,6 +117,8 @@ function wireAuthGate() {
     if (!result.ok) return showError(result.error);
     location.reload();
   });
+
+  wirePasswordStrength();
 }
 
 function wireHeader(session) {
