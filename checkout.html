@@ -37,7 +37,7 @@
     </div>
 
     <div class="mb-8 flex rounded-full border border-border p-1">
-      <button type="button" id="tab-login" aria-pressed="true" class="flex-1 rounded-full py-2.5 text-[11px] uppercase tracking-[0.22em] transition-colors duration-300 bg-primary text-primary-foreground">Sign in</button>
+      <button type="button" id="tab-login" aria-pressed="true" class="flex-1 rounded-full py-2.5 text-[11px] uppercase tracking-[0.22em] transition-colors duration-300 bg-primary text-primary-foreground">Log in</button>
       <button type="button" id="tab-signup" aria-pressed="false" class="flex-1 rounded-full py-2.5 text-[11px] uppercase tracking-[0.22em] transition-colors duration-300 text-muted-foreground">Create account</button>
     </div>
 
@@ -54,7 +54,7 @@
         <input id="login-password" type="password" autocomplete="current-password" required placeholder="••••••••"
           class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
       </div>
-      <button type="submit" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 w-full">Sign in</button>
+      <button type="submit" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 w-full">Log in</button>
       <p class="text-center text-xs text-muted-foreground">New here? <button type="button" data-switch-tab="signup" class="text-primary underline-offset-4 hover:underline">Create an account</button></p>
     </form>
 
@@ -73,6 +73,15 @@
         <label for="signup-password" class="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Password</label>
         <input id="signup-password" type="password" autocomplete="new-password" required placeholder="At least 6 characters"
           class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
+        <div class="flex items-center gap-2">
+          <div class="flex h-1 flex-1 gap-1" id="password-strength-bar">
+            <span class="h-full flex-1 rounded-full bg-border transition-colors duration-300" data-seg></span>
+            <span class="h-full flex-1 rounded-full bg-border transition-colors duration-300" data-seg></span>
+            <span class="h-full flex-1 rounded-full bg-border transition-colors duration-300" data-seg></span>
+            <span class="h-full flex-1 rounded-full bg-border transition-colors duration-300" data-seg></span>
+          </div>
+          <span class="w-12 text-right text-[10px] uppercase tracking-[0.16em] text-muted-foreground" id="password-strength-label"></span>
+        </div>
       </div>
       <div class="space-y-2">
         <label for="signup-confirm" class="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Confirm password</label>
@@ -80,7 +89,7 @@
           class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring md:text-sm" />
       </div>
       <button type="submit" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8 w-full">Create account</button>
-      <p class="text-center text-xs text-muted-foreground">Already a member? <button type="button" data-switch-tab="login" class="text-primary underline-offset-4 hover:underline">Sign in</button></p>
+      <p class="text-center text-xs text-muted-foreground">Already a member? <button type="button" data-switch-tab="login" class="text-primary underline-offset-4 hover:underline">Log in</button></p>
     </form>
   </div>
 </div>
