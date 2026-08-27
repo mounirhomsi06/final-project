@@ -35,7 +35,8 @@ function save(orders) {
 }
 
 function generateOrderId() {
-  return `AH-${Date.now().toString(36).toUpperCase()}`;
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `AH-${Date.now().toString(36).toUpperCase()}${rand}`;
 }
 
 export function createOrder({ items, customer, subtotal, tax, total }) {

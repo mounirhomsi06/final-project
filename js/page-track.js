@@ -1,22 +1,17 @@
 import { initSite } from "./site.js";
-import { getOrder, orderStageIndex, STAGES } from "./orders.js";
+import { getOrder, getOrders, orderStageIndex, STAGES } from "./orders.js";
 import { money } from "./watch-data.js";
 
 const session = initSite();
 if (session) {
-  const form = document.getElementById("track-form");
-  const input = document.getElementById("track-input");
-  const errorBox = document.getElementById("track-error");
-  const result = document.getElementById("track-result");
+  const listView = document.getElementById("track-list-view");
+  const detailView = document.getElementById("track-detail-view");
+  const ordersList = document.getElementById("track-orders-list");
+  const emptyEl = document.getElementById("track-empty");
+  const backBtn = document.getElementById("track-back");
 
-  let pollTimer = null;
-
-  function showError(message) {
-    errorBox.textContent = message;
-    errorBox.hidden = false;
-    result.hidden = true;
-    if (pollTimer) clearInterval(pollTimer);
-  }
+  let detailPollTimer = null;
+  let listPollTimer = null;
 
   function renderStepper(stageIndex) {
     const container = document.getElementById("track-stepper");
@@ -34,7 +29,7 @@ if (session) {
     }).join("");
   }
 
-  function render(order) {
+  function renderDetail(order) {
     document.getElementById("track-order-id").textContent = order.id;
     document.getElementById("track-date").textContent = `Placed ${new Date(order.createdAt).toLocaleDateString(undefined, {
       year: "numeric",
@@ -59,37 +54,79 @@ if (session) {
       )
       .join("");
     document.getElementById("track-total").textContent = money(order.total);
-
-    errorBox.hidden = true;
-    result.hidden = false;
   }
 
-  function lookup(rawId) {
-    const id = rawId.trim();
-    if (!id) return;
-    const order = getOrder(id);
-    if (pollTimer) clearInterval(pollTimer);
-    if (!order) {
-      showError("We couldn't find that order in this browser. Orders are only remembered on the device and browser you paid with.");
+  function stagePill(order) {
+    const stage = STAGES[orderStageIndex(order)];
+    return `<span class="inline-flex shrink-0 items-center rounded-full border border-primary/50 px-2.5 py-1 text-[10px] uppercase tracking-[0.16em] text-primary">${stage.label}</span>`;
+  }
+
+  function renderList() {
+    const orders = getOrders();
+    if (orders.length === 0) {
+      emptyEl.hidden = false;
+      ordersList.innerHTML = "";
       return;
     }
-    render(order);
-    pollTimer = setInterval(() => {
+    emptyEl.hidden = true;
+    ordersList.innerHTML = orders
+      .map((o) => {
+        const extra = o.items.length > 1 ? ` + ${o.items.length - 1} more` : "";
+        const dateLabel = new Date(o.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+        return `
+        <li>
+          <button type="button" data-order-id="${o.id}" class="track-order-row flex w-full items-center justify-between gap-4 rounded-lg border border-border bg-card/50 p-5 text-left transition-colors duration-300 hover:border-primary/50">
+            <div class="min-w-0">
+              <p class="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">${o.id} · ${dateLabel}</p>
+              <p class="mt-1 truncate text-sm">${escapeHtml(o.items[0].name)}${extra}</p>
+            </div>
+            <div class="flex shrink-0 items-center gap-4">
+              <span class="font-display text-lg">${money(o.total)}</span>
+              ${stagePill(o)}
+            </div>
+          </button>
+        </li>`;
+      })
+      .join("");
+
+    ordersList.querySelectorAll("[data-order-id]").forEach((btn) => {
+      btn.addEventListener("click", () => openDetail(btn.dataset.orderId));
+    });
+  }
+
+  function openDetail(id) {
+    const order = getOrder(id);
+    if (!order) return;
+
+    renderDetail(order);
+    listView.hidden = true;
+    detailView.hidden = false;
+    history.replaceState(null, "", `track.html?order=${encodeURIComponent(id)}`);
+
+    if (detailPollTimer) clearInterval(detailPollTimer);
+    detailPollTimer = setInterval(() => {
       const fresh = getOrder(id);
-      if (fresh) render(fresh);
+      if (fresh) renderDetail(fresh);
     }, 1000);
   }
 
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    lookup(input.value);
-  });
+  function showList() {
+    if (detailPollTimer) clearInterval(detailPollTimer);
+    detailView.hidden = true;
+    listView.hidden = false;
+    history.replaceState(null, "", "track.html");
+    renderList();
+  }
+
+  backBtn.addEventListener("click", showList);
+
+  renderList();
+  listPollTimer = setInterval(() => {
+    if (!listView.hidden) renderList();
+  }, 2000);
 
   const fromQuery = new URLSearchParams(location.search).get("order");
-  if (fromQuery) {
-    input.value = fromQuery;
-    lookup(fromQuery);
-  }
+  if (fromQuery) openDetail(fromQuery);
 }
 
 function escapeHtml(s) {

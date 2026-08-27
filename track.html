@@ -135,36 +135,48 @@
 </header>
 
 <main class="mx-auto max-w-3xl px-6 py-16">
-  <p class="text-xs uppercase tracking-[0.42em] text-primary">Track your order</p>
-  <h1 class="mt-3 text-4xl tracking-tight">Where's my watch?</h1>
-  <p class="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
-    Enter the order number from your confirmation to follow it from the bench to your door.
-  </p>
 
-  <form id="track-form" class="mt-8 flex flex-wrap gap-3">
-    <input id="track-input" placeholder="e.g. AH-M2K3P9QZ" required
-      class="h-10 min-w-[220px] flex-1 rounded-md border border-input bg-transparent px-3 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
-    <button type="submit" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-10 px-8">Track</button>
-  </form>
+  <div id="track-list-view">
+    <p class="text-xs uppercase tracking-[0.42em] text-primary">Track your order</p>
+    <h1 class="mt-3 text-4xl tracking-tight">Where's my watch?</h1>
+    <p class="mt-3 max-w-lg text-sm leading-relaxed text-muted-foreground">
+      Every order placed in this browser, ready to follow from the bench to your door. Pick one to see it.
+    </p>
 
-  <p id="track-error" hidden class="mt-5 rounded-md border border-destructive/40 bg-destructive/10 px-4 py-2.5 text-xs leading-relaxed text-destructive"></p>
-
-  <div id="track-result" hidden class="mt-10 rounded-lg border border-border bg-card/60 p-6 sm:p-8">
-    <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-border pb-4">
-      <div>
-        <p class="text-[11px] uppercase tracking-[0.28em] text-muted-foreground">Order</p>
-        <p class="mt-1 font-display text-xl text-primary" id="track-order-id"></p>
+    <div id="track-empty" hidden class="mt-10 rounded-lg border border-border p-10 text-center">
+      <p class="text-sm text-muted-foreground">No orders yet.</p>
+      <div class="mt-6 flex justify-center gap-3">
+        <a href="customise.html" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2">Customise a watch</a>
+        <a href="collection.html" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium cursor-pointer transition-colors border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2">Shop brands</a>
       </div>
-      <p class="text-xs text-muted-foreground" id="track-date"></p>
     </div>
 
-    <div class="mt-8 flex items-start" id="track-stepper"></div>
-    <p class="mt-4 text-center text-sm text-muted-foreground" id="track-status-detail"></p>
+    <ul class="mt-8 space-y-3" id="track-orders-list"></ul>
+  </div>
 
-    <ul class="mt-8 space-y-4 border-t border-border pt-6" id="track-items"></ul>
-    <div class="mt-4 flex justify-between border-t border-border pt-4 font-display text-lg">
-      <span>Total paid</span>
-      <span class="text-primary" id="track-total"></span>
+  <div id="track-detail-view" hidden>
+    <button id="track-back" type="button" class="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.22em] text-muted-foreground transition-colors duration-300 hover:text-foreground">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-3.5"><path d="m15 18-6-6 6-6"/></svg>
+      All orders
+    </button>
+
+    <div class="mt-6 rounded-lg border border-border bg-card/60 p-6 sm:p-8">
+      <div class="flex flex-wrap items-baseline justify-between gap-2 border-b border-border pb-4">
+        <div>
+          <p class="text-[11px] uppercase tracking-[0.28em] text-muted-foreground">Order</p>
+          <p class="mt-1 font-display text-xl text-primary" id="track-order-id"></p>
+        </div>
+        <p class="text-xs text-muted-foreground" id="track-date"></p>
+      </div>
+
+      <div class="mt-8 flex items-start" id="track-stepper"></div>
+      <p class="mt-4 text-center text-sm text-muted-foreground" id="track-status-detail"></p>
+
+      <ul class="mt-8 space-y-4 border-t border-border pt-6" id="track-items"></ul>
+      <div class="mt-4 flex justify-between border-t border-border pt-4 font-display text-lg">
+        <span>Total paid</span>
+        <span class="text-primary" id="track-total"></span>
+      </div>
     </div>
   </div>
 </main>
