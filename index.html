@@ -179,20 +179,32 @@
     <div class="reveal" data-from="up"><p class="text-[11px] uppercase tracking-[0.42em] text-primary">The Atelier</p></div>
     <div class="reveal" data-from="up" style="transition-delay:90ms"><h2 class="mt-4 max-w-2xl text-4xl leading-tight sm:text-5xl">A room with six benches, one lathe and a very old clock.</h2></div>
     <div class="mt-14 grid gap-10 sm:grid-cols-3">
-      <div class="reveal" data-from="up">
-        <div class="border-t border-border pt-6 transition-colors duration-500 hover:border-primary">
+      <div class="reveal group" data-from="up">
+        <div class="relative mb-6 overflow-hidden">
+          <img src="images/atelier-bench.jpg" alt="The watchmaker's bench under warm brass lamps, tools and movements laid out" loading="lazy" width="1280" height="1024" class="aspect-[4/3] w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]" />
+          <div aria-hidden class="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-700 group-hover:opacity-30" style="background:linear-gradient(to top, oklch(0.16 0.008 60 / 0.55), transparent 45%)"></div>
+        </div>
+        <div class="border-t border-border pt-6 transition-colors duration-500 group-hover:border-primary">
           <p class="text-[11px] uppercase tracking-[0.3em] text-primary">01 — The case</p>
           <p class="mt-3 text-sm leading-relaxed text-muted-foreground">Turned from a single billet, then hand-brushed for four hours until the grain runs one way only.</p>
         </div>
       </div>
-      <div class="reveal" data-from="up" style="transition-delay:140ms">
-        <div class="border-t border-border pt-6 transition-colors duration-500 hover:border-primary">
+      <div class="reveal group" data-from="up" style="transition-delay:140ms">
+        <div class="relative mb-6 overflow-hidden">
+          <img src="images/dial-macro.jpg" alt="Macro view of a sunray-brushed black dial with gold hands and indices" loading="lazy" width="1280" height="1024" class="aspect-[4/3] w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]" />
+          <div aria-hidden class="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-700 group-hover:opacity-30" style="background:linear-gradient(to top, oklch(0.16 0.008 60 / 0.55), transparent 45%)"></div>
+        </div>
+        <div class="border-t border-border pt-6 transition-colors duration-500 group-hover:border-primary">
           <p class="text-[11px] uppercase tracking-[0.3em] text-primary">02 — The dial</p>
           <p class="mt-3 text-sm leading-relaxed text-muted-foreground">Lacquered in eleven coats. Each is left to settle overnight before the next is laid down.</p>
         </div>
       </div>
-      <div class="reveal" data-from="up" style="transition-delay:280ms">
-        <div class="border-t border-border pt-6 transition-colors duration-500 hover:border-primary">
+      <div class="reveal group" data-from="up" style="transition-delay:280ms">
+        <div class="relative mb-6 overflow-hidden">
+          <img src="images/watchmaker-hands.jpg" alt="Gloved hands assembling a gold watch case with tweezers" loading="lazy" width="1280" height="1024" class="aspect-[4/3] w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.06]" />
+          <div aria-hidden class="pointer-events-none absolute inset-0 opacity-70 transition-opacity duration-700 group-hover:opacity-30" style="background:linear-gradient(to top, oklch(0.16 0.008 60 / 0.55), transparent 45%)"></div>
+        </div>
+        <div class="border-t border-border pt-6 transition-colors duration-500 group-hover:border-primary">
           <p class="text-[11px] uppercase tracking-[0.3em] text-primary">03 — The oath</p>
           <p class="mt-3 text-sm leading-relaxed text-muted-foreground">Nothing ships without a signature on the case-back and ten years of servicing behind it.</p>
         </div>
@@ -226,10 +238,14 @@
     </div>
   </section>
 
-  <section class="stage mx-auto max-w-7xl px-6 py-28 text-center">
-    <div class="reveal" data-from="scale">
-      <p class="font-display text-3xl leading-snug sm:text-4xl">"A watch should outlive the person who chose it."</p>
-      <p class="mt-6 text-[11px] uppercase tracking-[0.42em] text-primary">Élise Roubaud · Head Watchmaker</p>
+  <section class="stage relative overflow-hidden">
+    <img src="images/dial-macro.jpg" alt="" aria-hidden loading="lazy" width="1280" height="1024" class="absolute inset-0 h-full w-full object-cover opacity-25" />
+    <div aria-hidden class="absolute inset-0" style="background:radial-gradient(ellipse 70% 60% at 50% 45%, transparent, oklch(0.14 0.008 60) 75%)"></div>
+    <div class="relative mx-auto max-w-7xl px-6 py-28 text-center">
+      <div class="reveal" data-from="scale">
+        <p class="font-display text-3xl leading-snug sm:text-4xl">"A watch should outlive the person who chose it."</p>
+        <p class="mt-6 text-[11px] uppercase tracking-[0.42em] text-primary">Élise Roubaud · Head Watchmaker</p>
+      </div>
     </div>
   </section>
 </main>
