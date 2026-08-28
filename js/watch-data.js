@@ -1,6 +1,12 @@
 // Watch part catalogue, pricing and small colour helpers shared by the
 // collection grid, the exploded-view SVG and the customiser.
 
+export const SIZES = [
+  { id: "36", name: "36mm", price: 0, hint: "Compact, classic" },
+  { id: "40", name: "40mm", price: 150, hint: "Versatile" },
+  { id: "42", name: "42mm", price: 280, hint: "Bold presence" },
+];
+
 export const METALS = [
   { id: "gold", name: "18k Yellow Gold", price: 4200, swatch: "#d7a53a", swatch2: "#8a6413", hint: "Warm, unmistakable" },
   { id: "silver", name: "Brushed Steel", price: 0, swatch: "#d9dde2", swatch2: "#7d8590", hint: "The classic" },
@@ -35,6 +41,7 @@ export const CLASPS = [
 export const BASE_PRICE = 2900;
 
 export const DEFAULT_CONFIG = {
+  size: "40",
   metal: "silver",
   dial: "midnight",
   strap: "leather-tan",
@@ -60,6 +67,7 @@ export function metalColors(id) {
 export function configPrice(config) {
   return (
     BASE_PRICE +
+    (config.size ? find(SIZES, config.size).price : 0) +
     find(METALS, config.metal).price +
     find(DIALS, config.dial).price +
     find(STRAPS, config.strap).price +
@@ -70,11 +78,14 @@ export function configPrice(config) {
 
 export function configSummary(config) {
   return [
+    config.size ? find(SIZES, config.size).name : null,
     find(METALS, config.metal).name,
     find(DIALS, config.dial).name + " dial",
     find(STRAPS, config.strap).name,
     find(CLASPS, config.clasp).name + " clasp",
-  ].join(" · ");
+  ]
+    .filter(Boolean)
+    .join(" · ");
 }
 
 export function strapColor(id) {

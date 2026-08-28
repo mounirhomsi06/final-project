@@ -14,7 +14,7 @@ const STAGE_DURATIONS_MS = {
 export const STAGES = [
   { id: "preparing", label: "Preparing", detail: "Your watch is being finished and cased at the bench." },
   { id: "shipped", label: "Shipped", detail: "Your watch has left the atelier and is on its way." },
-  { id: "delivered", label: "Delivered", detail: "Delivered. Enjoy your Atelier Horo." },
+  { id: "delivered", label: "Delivered", detail: "Delivered. Enjoy your Atelier Homsi." },
 ];
 
 function load() {

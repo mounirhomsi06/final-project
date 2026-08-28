@@ -2,7 +2,7 @@ import { initSite, refreshBasketCount } from "./site.js";
 import { mountExplodedWatch, WATCH_PARTS } from "./exploded-watch.js";
 import { addItem } from "./basket.js";
 import { toastSuccess } from "./toast.js";
-import { CLASPS, DEFAULT_CONFIG, DIALS, METALS, STRAPS, configPrice, configSummary, money } from "./watch-data.js";
+import { CLASPS, DEFAULT_CONFIG, DIALS, METALS, SIZES, STRAPS, configPrice, configSummary, money } from "./watch-data.js";
 
 const session = initSite();
 if (session) {
@@ -60,6 +60,40 @@ if (session) {
     btn.addEventListener("blur", () => setActive(null));
     partButtonsEl.appendChild(btn);
   });
+
+  // Case size: a pill row rather than a colour swatch, since size isn't a colour
+  const sizeButtonsEl = document.getElementById("size-buttons");
+  const sizeLabelEl = document.getElementById("size-active-label");
+  function updateSizeLabel() {
+    const active = SIZES.find((o) => o.id === config.size);
+    sizeLabelEl.textContent = `${active.name}${active.price > 0 ? ` · +${money(active.price)}` : " · included"}`;
+  }
+  SIZES.forEach((o) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.title = o.hint ? `${o.name} — ${o.hint}` : o.name;
+    b.textContent = o.name;
+    b.setAttribute("aria-pressed", String(o.id === config.size));
+    b.className = `rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.14em] transition-colors duration-300 ${
+      o.id === config.size ? "border-primary text-primary" : "border-border text-muted-foreground hover:text-foreground"
+    }`;
+    b.addEventListener("click", () => {
+      config.size = o.id;
+      watch.update({ config });
+      refreshPrice();
+      updateSizeLabel();
+      sizeButtonsEl.querySelectorAll("button").forEach((sb, i) => {
+        const on = SIZES[i].id === config.size;
+        sb.classList.toggle("border-primary", on);
+        sb.classList.toggle("text-primary", on);
+        sb.classList.toggle("border-border", !on);
+        sb.classList.toggle("text-muted-foreground", !on);
+        sb.setAttribute("aria-pressed", String(on));
+      });
+    });
+    sizeButtonsEl.appendChild(b);
+  });
+  updateSizeLabel();
 
   // Option rows: case metal, dial, strap, clasp
   const rows = [
@@ -141,8 +175,8 @@ if (session) {
   document.getElementById("add-to-basket").addEventListener("click", () => {
     const price = configPrice(config);
     const { capped } = addItem({
-      id: `custom-${config.metal}-${config.dial}-${config.strap}-${config.clasp}-${config.engraving.trim()}`,
-      name: "Bespoke Atelier Horo",
+      id: `custom-${config.size}-${config.metal}-${config.dial}-${config.strap}-${config.clasp}-${config.engraving.trim()}`,
+      name: "Bespoke Atelier Homsi",
       subtitle: configSummary(config) + (config.engraving.trim() ? ` · "${config.engraving.trim()}"` : ""),
       price,
       kind: "custom",
