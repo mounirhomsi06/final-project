@@ -355,7 +355,7 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
   const svg = `<svg viewBox="0 -150 400 860" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Exploded view of a customisable wristwatch">
     ${defs(id, m, dial, linkMetal)}
 
-    <g style="transform:translate(${CX}px,${CY}px) scale(${r(sizeScale)}, ${r(sizeScale * (1 - 0.26 * explode))}) translate(${-CX}px,${-CY}px);transition:transform 900ms cubic-bezier(.22,1,.36,1)">
+    <g style="transform:translate(${CX}px,${CY}px) scale(1, ${r(1 - 0.26 * explode)}) translate(${-CX}px,${-CY}px);transition:transform 900ms cubic-bezier(.22,1,.36,1)">
       <ellipse cx="${CX}" cy="600" rx="${r(122 - explode * 30)}" ry="${r(17 - explode * 7)}" fill="#000" opacity="${r(0.4 - explode * 0.18)}" />
 
       <g transform="${t("clasp")}" ${partAttrs("clasp")}>
@@ -367,6 +367,7 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
         <g style="transform:${move(STRAP_LOWER)};transition:transform 900ms cubic-bezier(.22,1,.36,1)">${strapLower}</g>
       </g>
 
+      <g style="transform:translate(${CX}px,${CY}px) scale(${r(sizeScale)}) translate(${-CX}px,${-CY}px);transition:transform 300ms ease">
       <g transform="${t("case")}" ${partAttrs("case")}>
         <g filter="url(#shadow-${id})">
           ${caseLugs(id, m)}
@@ -467,6 +468,7 @@ export function explodedWatchMarkup({ config, explode, activePart, uid }) {
         <path d="M144 232 A88 88 0 0 1 246 198" stroke="url(#sheen-${id})" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.6" />
         <path d="M150 330 A88 88 0 0 0 214 360" stroke="#ffffff" stroke-opacity="0.18" stroke-width="7" fill="none" stroke-linecap="round" />
         ${crystalGlints(id)}
+      </g>
       </g>
     </g>
   </svg>`;
